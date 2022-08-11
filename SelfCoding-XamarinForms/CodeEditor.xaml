@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="SelfCoding_XamarinForms.CodeEditor"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:webview="clr-namespace:Xam.Plugin.WebView.Abstractions"
+    HeightRequest="200">
+    <webview:FormsWebView
+        x:Name="chartWeb"
+        ContentType="LocalFile"
+        EnableGlobalCallbacks="False"
+        EnableGlobalHeaders="False"
+        HorizontalOptions="FillAndExpand"
+        IsVisible="true"
+        OnContentLoaded="chartWeb_OnContentLoaded"
+        Source="monaco/index.html"
+        VerticalOptions="FillAndExpand" />
+</ContentView>

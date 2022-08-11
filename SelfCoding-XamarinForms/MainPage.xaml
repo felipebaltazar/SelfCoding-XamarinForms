@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SelfCoding_XamarinForms"
+             x:Class="SelfCoding_XamarinForms.MainPage">
+    <ScrollView>
+        <StackLayout>
+            <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
+                <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+            </Frame>
+            <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
+
+            <StackLayout x:Name="playground">
+                <StackLayout>
+                    <Label Text="Try me"/>
+                </StackLayout>
+            </StackLayout>
+
+            <local:CodeEditor x:Name="editor"
+                              HeightRequest="300"
+                              Context="{AppThemeBinding Dark=Dark, Light=Light, Default=Light}"
+                              ReferenceLayout="{Reference playground}"
+                              ControlType="{x:Type StackLayout}"/>
+        </StackLayout>
+
+    </ScrollView>
+
+</ContentPage>

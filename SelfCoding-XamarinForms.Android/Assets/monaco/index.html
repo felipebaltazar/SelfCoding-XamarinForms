@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Editor</title>
+<link rel="stylesheet" data-name="vs/editor/editor.main" href="file:///android_asset/monaco/css/monaco.css">
+</head>
+<body>
+<div id="container" style="height:400px;"></div>
+<script type="text/javascript" src="file:///android_asset/monaco/js/monaco-editor/min/vs/loader.js"></script>
+<script>
+    require.config({ paths: { 'vs': 'file:///android_asset/monaco/js/monaco-editor/min/vs' }});
+	var myEditor;
+	var properties = [];
+	
+	// Before loading vs/editor/editor.main, define a global MonacoEnvironment that overwrites
+	// the default worker url location (used when creating WebWorkers). The problem here is that
+	// HTML5 does not allow cross-domain web workers, so we need to proxy the instantiation of
+	// a web worker through a same-domain script
+	window.MonacoEnvironment = {
+		getWorkerUrl: function(workerId, label) {
+		  return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+			self.MonacoEnvironment = {
+			  baseUrl: 'file:///android_asset/monaco/js/monaco-editor/'
+			};
+			importScripts('/min/vs/base/worker/workerMain.js');`
+		  )}`;
+		}
+	};
+
+	require(["vs/editor/editor.main"], function () {
+	  myEditor = monaco.editor.create(document.getElementById('container'), {
+		  value:'',
+		  language: 'xml',
+		  theme: 'vs-dark',
+		  readOnly: false,
+		  roundedSelection: false,
+	      scrollBeyondLastLine: false,
+		  minimap: { enabled: false },
+		  autoIndent: true,
+          formatOnPaste: true,
+          formatOnType: true
+	  });
+
+	  myEditor.getModel().onDidChangeContent((event) => {
+		  onEditorCodeChanged(myEditor.getValue())
+	  });
+
+		function createProposals() {
+			var availableItems = [];
+
+            for (var i = 0; i < properties.length; i++) {
+				availableItems.push({
+                    label: properties[i],
+					kind: monaco.languages.CompletionItemKind.Field,
+                    insertText: properties[i],
+					insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+				});
+            }
+
+			return availableItems;
+		}
+
+	  // register a completion item provider for xml language
+		monaco.languages.registerCompletionItemProvider('xml', {
+			provideCompletionItems: function (model, position) {
+				var suggestions = createProposals();
+				return {
+					suggestions: suggestions
+				};
+			}
+        });
+	});
+	
+	function setTheme(themeName){
+        monaco.editor.setTheme(themeName);
+	}
+	
+	function setValue(valueText){
+		myEditor.getModel().setValue(valueText);
+        setTimeout(() => {
+            myEditor.getAction('editor.action.formatDocument').run();
+        }, 1000)
+	}
+
+	function setPropertiesForAutocomplete(names) {
+        console.log(names);
+        var str_array = names.split(',');
+
+        for (var i = 0; i < str_array.length; i++) {
+            properties.push(str_array[i])
+        }
+    }
+</script>
+</body>
+</html>
