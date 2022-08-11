@@ -19,7 +19,6 @@ namespace Xam.Plugin.WebView.Droid
             Reference = new WeakReference<FormsWebViewRenderer>(renderer);
         }
 
-        /// Correção para crash <see href="https://appcenter.ms/orgs/Tecfinance/apps/br.com.clear.android/crashes/errors/1407871896u/reports/2517856031954199999-cbad0034-bef0-490d-bf71-90ccabafc8e5/raw"/>
         public FormsWebViewClient(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
         }
